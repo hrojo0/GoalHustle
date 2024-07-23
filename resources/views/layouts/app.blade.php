@@ -21,14 +21,13 @@
              <!-- Scripts -->
              @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- Estilos css generales -->
-        <link href="{{ asset('build/assets/css/font-awesome.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/bootstrap.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/animate.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/slick.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/style.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/responsive.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/assets/css/colors.css') }}" rel="stylesheet">
-        
+        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/slick.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/colors.css') }}" rel="stylesheet">
 
 
 
@@ -87,8 +86,8 @@
         @yield('scripts')
 
         <!-- Scripts -->
-        <script src="{{ asset('build/assets/js/jquery.js') }}"></script>
-        <script src="{{ asset('build/assets/js/plugins.js') }}"></script>
-        <script src="{{ asset('build/assets/js/jquery.main.js') }}"></script>
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/plugins.js') }}"></script>
+        <script src="{{ asset('js/jquery.main.js') }}"></script>
     </body>
 </html>

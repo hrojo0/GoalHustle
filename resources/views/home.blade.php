@@ -1,6 +1,6 @@
 @section('title', 'GoalHustle')
 @section('styles')
-    <link href="{{ asset('build/assets/css/tournament.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/tournament.css') }}" rel="stylesheet">
 @endsection
 <x-app-layout>
 	<div class="home-box">

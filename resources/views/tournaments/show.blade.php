@@ -1,12 +1,12 @@
 @section('title', 'Torneos de futbol')
 @section('styles')
-    <link href="{{ asset('build/assets/css/tournament.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/tournament.css') }}" rel="stylesheet">
 @endsection
 @section('scripts')
-    <script type="text/javascript" src="{{ asset('build/assets/js/t/jquery.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('build/assets/js/t/uikit.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('build/assets/js/c/accordion.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('build/assets/js/t/theme.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/t/jquery.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/t/uikit.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/c/accordion.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/t/theme.js')}}"></script>
 @endsection
 <x-app-layout>
     @include('tournaments.partials.header-img')
