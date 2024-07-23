@@ -89,7 +89,7 @@ class GameController extends Controller
 
         $orderColumn = $columnMap[$orderColumnName];
         $orderDir = $request->input('order.0.dir');
-
+ 
         $games = $queryGames->offset($request->input('start'))
             ->limit($request->input('length'))
             ->orderBy($orderColumn, $orderDir)
