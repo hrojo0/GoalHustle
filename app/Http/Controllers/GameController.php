@@ -86,7 +86,7 @@ class GameController extends Controller
             'homeTeam' => 'home_team_id',
             'awayTeam' => 'away_team_id'
         ];
- 
+
         $orderColumn = $columnMap[$orderColumnName];
         $orderDir = $request->input('order.0.dir');
  
