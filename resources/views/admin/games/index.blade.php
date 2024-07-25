@@ -1,8 +1,9 @@
 @extends('adminlte::page')
-@section('title', 'Manage players')
+@section('title', 'Manage games')
 
 @section('content_header')
-    <h2>Manage players</h2>
+    <h2>Manage games
+    </h2>
 @stop
 
 @section('content')
@@ -18,6 +19,10 @@
     <div class="alert alert-info">
         {{ session('success-delete') }}
     </div>
+@elseif (session('success-games'))
+    <div class="alert alert-info">
+        {{ session('success-games') }}
+    </div>
 @endif
 
 <div class="card">
@@ -30,7 +35,7 @@
         <div class="form-group">
             <label for="tournament">Load tournament games</label>
             <select class="form-control" name="tournament" id="tournament">                    
-                <option value="">Pick a tournament</option>
+                <option value="" id="tournament_first">Pick a tournament</option>
                 @foreach ($tournaments as $tournament)
                     <option value="{{ $tournament->id }}">
                         {{ $tournament->name }}
@@ -56,15 +61,35 @@
     <script>
         $(document).ready(function() {
             var table;
+            var flag = 0;
             $('#tournament').on('change', function() {
+                $('#tournament_first').text('All tournaments');
                 var tournamentId = $(this).val();
-
-
-                if ($.fn.DataTable.isDataTable('#games-table')) {
+                
+                /*if ($.fn.DataTable.isDataTable('#games-table')) {}*/
+                //check first load of data
+                if(flag == 0){
+                    $('#card-body').append(`
+                            <form id="generate-games-form" method="post" action="{{ route('games.generateGames') }}">
+                                @csrf
+                                <input type="hidden" name="tournament_id" id="tournament_id">
+                                <button type="submit" class="btn btn-primary btn-sm">Generate Games</button>
+                            </form>
+                        `);
+                } else {
                     table.destroy();
                     $('#games-table').remove();
                 }
-                $('#card-body').append('<table id="games-table" class="table table-striped"><thead><tr><th>Tournament</th><th>Home Team</th><th>Away Team</th><th></th></tr></thead><tbody></tbody></table>');
+                $('#tournament_id').val(tournamentId);
+                //load datatable
+                $('#card-body').append(`
+                        <table id="games-table" class="table table-striped">
+                            <thead>
+                                <tr><th>Tournament</th><th>Home Team</th><th>Away Team</th><th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>`);
                 table = $('#games-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -123,6 +148,8 @@
                         searchPlaceholder: "Search games by team"
                     }
                 });
+                flag = 1;
+                
             });
             function search(){
                 var table = $('#teams-table').DataTable({
@@ -148,8 +175,8 @@
                             data: 'slug',
                             render: function(data, type, row) {
                                 return `
-                                    <a href="teams/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                    <form action="teams/${data}" method="POST" style="display:inline;">
+                                    <a href="teams/${row.game}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    <form action="teams/${rowl.game}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <input type="submit" value="Delete" class="btn btn-danger btn-sm">
@@ -174,6 +201,9 @@
             $('#search').on('keyup', function() {
                 table.search(this.value).draw();
             });
+            setTimeout(function(){
+                $('.alert-info').fadeOut(); 
+            }, 5000);
         });
     </script>
 @stop

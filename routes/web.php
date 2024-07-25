@@ -96,12 +96,16 @@ Route::namespace('App\Http\Controllers')->prefix('admin')->group(function(){
         Route::post('/games/gamesPerTournament', [GameController::class, 'gamesPerTournament'])
                 ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
                 ->name('games.gamesPerTournament');
+        Route::post('/games/generateGames', [GameController::class, 'generateGames'])
+                ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
+                ->name('games.generateGames');
         Route::resource('games', 'GameController')->except('show', 'search', 'gamesPerTournament')
         ->middleware(['auth', 'verified',
                 'check.admin.permission:games.index', 
                 'check.admin.permission:games.create', 
                 'check.admin.permission:games.edit', 
-                'check.admin.permission:games.destroy'])
+                'check.admin.permission:games.destroy'
+                ])
                 ->names('games');
         //Jugadores
         Route::post('/players/search', [PlayerController::class, 'search'])
