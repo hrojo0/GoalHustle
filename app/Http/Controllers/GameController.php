@@ -168,6 +168,7 @@ class GameController extends Controller
                 $min = $dateInitialRound;
                 $max = date_add($dateInitialRound, date_interval_create_from_date_string("3 days"));
                 //$matchday = rand($min, $max);
+                $matchday = $dateInitialRound;
                 //Create game with these specific parameters and factory on the others
                 Game::insert([
                     'tournament_id' => $tournament->id,
