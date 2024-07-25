@@ -122,104 +122,57 @@ class GameController extends Controller
     }
 
     public function generateGames(Request $request){
-        //$tournament_id = $request->input('tournament_id');
         $tournament = Tournament::findOrFail($request->input('tournament_id'));
-
-        Game::where('tournament_id', $tournament->id)->delete();
-
-        $teams = TournamentTeam::where('tournament_id', $tournament->id)
-            ->get();
-
-
-
-
-
-
-
-
-
-            $gamesCreated = [];
-            $roundsTournament = $tournament->rounds;
-            $roundTeams = []; //$roundTeams[]
-            for ($i = 1; $i <= $roundsTournament; $i++) {
-                $roundTeams[$i] = []; //$roundTeams[1][]
-            }
-            
-            $gamesTotal = count($teams) * $roundsTournament;
-            $round = 1;
-            $roundFlag = 0;
-            $dateInitialRound = new DateTime();
-            $dateInitialRound->modify('next friday');
-            for ($i = 0; $i < $gamesTotal; $i++) {
-                $homeTeam = $teams->random()->id;
-                $awayTeam = $teams->random()->id;
-
-                // Ensure home_team_id is not equal to away_team_id and not duplicated
-                while ($homeTeam === $awayTeam || in_array([$homeTeam, $awayTeam], $gamesCreated) || in_array([$awayTeam, $homeTeam], $gamesCreated) ||
-                in_array($homeTeam, $roundTeams[$round]) || in_array($awayTeam, $roundTeams[$round])) {
-                    $homeTeam = $teams->random()->id;
-                    $awayTeam = $teams->random()->id;
-                }
-
-                $gamesCreated[] = [$homeTeam, $awayTeam];
-                $roundTeams[$round][] = $homeTeam; //$roundTeams[1]['homeTeam']
-                $roundTeams[$round][] = $awayTeam; //$roundTeams[1]['homeTeam','awayTeam']
-
-                $min = $dateInitialRound;
-                $max = date_add($dateInitialRound, date_interval_create_from_date_string("3 days"));
-                //$matchday = rand($min, $max);
-                $matchday = $dateInitialRound;
-                //Create game with these specific parameters and factory on the others
-                Game::insert([
-                    'tournament_id' => $tournament->id,
-                    'home_team_id' => $homeTeam,
-                    'away_team_id' => $awayTeam,
-                    'matchday' => $matchday,
-                    'round' => $round,
-                    'home_goals' => 0,
-                    'away_goals' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-                $roundGames = $gamesTotal / $roundsTournament;
-                $roundFlag++;
-                $round = $roundFlag == $roundGames ? $round++ : $round;
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        // Your logic to generate games for the specific tournament
-        // ...
     
-        
+        Game::where('tournament_id', $tournament->id)->delete();
+    
+        $teams = TournamentTeam::where('tournament_id', $tournament->id)->pluck('team_id')->toArray();
+    
+        $roundsTournament = count($teams) - 1;
+        $gamesTotal = (count($teams) / 2) * $roundsTournament;
+    
+        $dateInitialRound = new DateTime();
+        $dateInitialRound->modify('next friday');
+        $generatedGames = [];
+    
+        for ($round = 1; $round <= $roundsTournament; $round++) {
+            $shuffledTeams = $teams;
+            shuffle($shuffledTeams);
+    
+            for ($i = 0; $i < count($shuffledTeams) / 2; $i++) {
+                $homeTeam = $shuffledTeams[$i];
+                $awayTeam = $shuffledTeams[count($shuffledTeams) - 1 - $i];
+    
+                while (in_array([$homeTeam, $awayTeam, $tournament->id], $generatedGames) ||
+                in_array([$awayTeam, $homeTeam, $tournament->id], $generatedGames) || $homeTeam === $awayTeam) {
+                    shuffle($shuffledTeams);
+                    $homeTeam = $shuffledTeams[$i];
+                    $awayTeam = $shuffledTeams[count($shuffledTeams) - 1 - $i];
+                }
+                    $generatedGames[] = [$homeTeam, $awayTeam, $tournament->id];
+    
+                    $randomPlusDays = mt_rand(0, 2);
+                    $matchday = clone $dateInitialRound;
+                    $matchday->modify("+{$randomPlusDays} days");
+                    $matchday = $matchday->format('Y-m-d');
+    
+                    Game::create([
+                        'tournament_id' => $tournament->id,
+                        'home_team_id' => $homeTeam,
+                        'away_team_id' => $awayTeam,
+                        'matchday' => $matchday,
+                        'round' => $round,
+                        'home_goals' => 0,
+                        'away_goals' => 0,
+                    ]);
+                
+            }
+            $dateInitialRound->modify('next friday');
+        }
+    
         return redirect()->route('games.index')
-            ->with('success-games', 'Games for ' . $tournament->name . ' successfully generated');
+            ->with('success-games', $gamesTotal.' games for ' . $tournament->name . ' successfully generated');
     }
+    
+    
 }

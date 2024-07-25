@@ -15,7 +15,7 @@
                                 ];
                             @endphp
                             <span>{{ $matchday->day }}</span>
-                            {{ $shortMonths[$matchday->month]; }}
+                            {{ $shortMonths[$matchday->month] }}
                         </div>
                     
                         <div class="logo">

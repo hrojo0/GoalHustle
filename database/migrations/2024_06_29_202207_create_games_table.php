@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('away_goals');
             $table->timestamps();
 
-            $table->unique(['home_team_id', 'away_team_id']);
+            $table->unique(['tournament_id','home_team_id', 'away_team_id']);
 
         });
     }

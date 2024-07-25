@@ -59,7 +59,7 @@
                                                             9 => 'SEP', 10 => 'OCT', 11 => 'NOV', 12 => 'DIC'
                                                         ];
                                                     @endphp
-                                                    <h1>{{ $matchday->day.' '.$shortMonths[$matchday->month]; }}</h1>
+                                                    <h1>{{ $matchday->day.' '.$shortMonths[$matchday->month] }}</h1>
                                                 </div>
                                             </div>
                                         </div>
