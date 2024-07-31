@@ -1,68 +1,115 @@
 @extends('adminlte::page')
-
-@section('title', 'Edit player')
+@section('title', 'Edit Game')
 
 @section('content_header')
-    <h2>Edit Player</h2>
-@endsection
+    <h2>Edit game</h2>
+@stop
+
+
 
 @section('content')
+@if (session('success-create'))
+    <div class="alert alert-info">
+        {{ session('failed-duplicate') }}
+    </div>
+@elseif (session('error-update'))
+    <div class="alert alert-info">
+        {{ session('error-update') }}
+    </div>
+@endif
 
-<div class="card">
-    <div class="card-body">
-        <form method="POST" action="{{ route('teams.update', $team->slug) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="form-group"><input type="hidden" name="id" value="{{ $team->id }}"></div>
-
-            <div class="form-group">
-                <label for="">Name</label>
-                <input type="text" class="form-control" id="name" name='name' placeholder="Team name" value="{{ $team->name }}">
-
-                <x-input-error :messages="$errors->get('name')" class="mt-2 text-danger" />
-            </div>
-
-            <div class="form-group">
-                <label for="">Slug</label>
-                <input type="text" class="form-control" id="slug" name='slug' 
-                placeholder="Team slug" readonly value="{{ $team->slug }}">
-
-                <x-input-error :messages="$errors->get('slug')" class="mt-2 text-danger" />
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ route('games.update', $game->id) }}" enctype="multipart/form-data">
+                @csrf 
+                @method('PUT')
                 
-            </div>
+                <div class="form-group">
+                    <label for="tournament">Select tournament</label>
+                    <select class="form-control" name="tournament" id="tournament">                    
+                        <option value="" id="tournament_first">Pick a tournament</option>
+                        @foreach ($tournaments as $tournament)
+                            <option value="{{ $tournament->id }}" {{ $game->tournament_id == $tournament->id ? 'selected' : '' }}>
+                                {{ $tournament->name }}
 
-            <div class="form-group">
-                <label>Change logo</label>
-                <input type="file" class="form-control-file mb-2" id="logo" name='logo'>
-
-                <div class="rounded mx-auto d-block">
-                    @if($team->logo)
-                        <img src="{{ asset('storage/'.$team->logo) }}" style="width: 250px">
-                    @else
-                     <p>Team doesn't have a logo</p>
-                    @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('tournament')" class="mt-2 text-danger" />
+                </div>
+             
+                <div class="form-group">
+                    <label for="tournament">Select home team</label>
+                    <select class="form-control" name="home_team" id="home_team">                    
+                        <option value="" id="team_first">Pick a team</option>
+                        @foreach ($teams as $team)
+                            <option value="{{ $team->id }}" 
+                                {{ $game->home_team_id == $team->id ? 'selected' : '' }}>
+                                {{ $team->name }}
+                            
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('home_team')" class="mt-2 text-danger" />
+                </div>
+             
+                <div class="form-group">
+                    <label for="tournament">Select away team</label>
+                    <select class="form-control" name="away_team" id="away_team">                    
+                        <option value="" id="team_first">Pick a team</option>
+                        @foreach ($teams as $team)
+                            <option value="{{ $team->id }}" {{ $game->away_team_id == $team->id ? 'selected' : '' }}>
+                                {{ $team->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('away_team')" class="mt-2 text-danger" />
                 </div>
 
-                <x-input-error :messages="$errors->get('logo')" class="mt-2 text-danger" />
-            </div>
+                <div class="form-group">
+                    <label for="">Matchday</label>
+                    <input type="date" class="form-control" id="matchday" name='matchday' placeholder="Matchday" value="{{ $game->matchday }}" >
+                    <x-input-error :messages="$errors->get('matchday')" class="mt-2 text-danger" />
+                </div>
 
+                <div class="form-group">
+                    <label>Round</label>
+                    <input type="number" class="form-control" id="round" name='round'
+                        placeholder="Round"
+                        value="{{ $game->round }}">
+                    <x-input-error :messages="$errors->get('round')" class="mt-2 text-danger" />
+                </div>
 
-            <input type="submit" value="Save changes" class="btn btn-primary">    
-        </form>
+                @if ($allow_score)
+                    <div class="form-group">
+                        <label>Home team goals</label>
+                        <input type="number" class="form-control" id="home_goals" name='home_goals'
+                            placeholder="Home goals"
+                            value="{{ $game->home_goals }}">
+                        <x-input-error :messages="$errors->get('home_goals')" class="mt-2 text-danger" />
+                    </div>
+                    <div class="form-group">
+                        <label>Away team goals</label>
+                        <input type="number" class="form-control" id="away_goals" name='away_goals'
+                            placeholder="Away goals"
+                            value="{{ $game->away_goals }}">
+                        <x-input-error :messages="$errors->get('away_goals')" class="mt-2 text-danger" />
+                    </div>
+                @endif
+                
 
+                <input type="submit" value="Save changes" class="btn btn-primary">
+            </form>
+        </div>
     </div>
-</div>
-@endsection
+@stop
 
 @section('js')
-    <script src="{{ asset('vendor\jQuery-Plugin-stringToSlug-1.3\jquery.stringToSlug.min.js') }}"></script>
-    <script>
-        $(document).ready( function() {
-        $("#name").stringToSlug({
-            setEvents: 'keyup keydown blur',
-            getPut: '#slug',
-            space: '-'
-        });
-        });
-    </script>
-@endsection
+<script>
+    $(document).ready(function() {
+        setTimeout(function(){
+            $('.alert-info').fadeOut(); 
+        }, 5000);
+    });
+</script>
+@stop

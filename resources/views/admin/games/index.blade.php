@@ -23,6 +23,10 @@
     <div class="alert alert-info">
         {{ session('success-games') }}
     </div>
+@elseif (session('failed-generate'))
+    <div class="alert alert-info">
+        {{ session('failed-generate') }}
+    </div>
 @endif
 
 <div class="card">
@@ -63,6 +67,7 @@
             var table;
             var flag = 0;
             $('#tournament').on('change', function() {
+                var tournamentName = $('#tournament option:selected').text();
                 $('#tournament_first').text('All tournaments');
                 var tournamentId = $(this).val();
                 
@@ -70,16 +75,41 @@
                 //check first load of data
                 if(flag == 0){
                     $('#card-body').append(`
-                            <form id="generate-games-form" method="post" action="{{ route('games.generateGames') }}">
-                                @csrf
-                                <input type="hidden" name="tournament_id" id="tournament_id">
-                                <button type="submit" class="btn btn-primary btn-sm">Generate Games</button>
-                            </form>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#generateModal">
+                            Generate Games
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="generateModal" tabindex="-1" role="dialog" aria-labelledby="generateModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="generateModalLabel">Generate games for <span class="tournament_name_generate"></span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    If this option is applied, it'll erase all the games and generate new ones for the tournament <span class="tournament_name_generate"></span> whit the teams associated with it.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <form id="generate-games-form" method="post" action="{{ route('games.generateGames') }}">
+                                        @csrf
+                                        <input type="hidden" name="tournament_id" id="tournament_id">
+                                        <button type="submit" class="btn btn-primary">Generate</button>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            
                         `);
                 } else {
                     table.destroy();
                     $('#games-table').remove();
                 }
+                $('#tournament_name_generate').text(tournamentName);
                 $('#tournament_id').val(tournamentId);
                 //load datatable
                 $('#card-body').append(`
@@ -127,8 +157,8 @@
                             data: 'game',
                             render: function(data, type, row) {
                                 return `
-                                    <a href="teams/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                    <form action="teams/${data}" method="POST" style="display:inline;">
+                                    <a href="games/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    <form action="games/${data}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <input type="submit" value="Delete" class="btn btn-danger btn-sm">

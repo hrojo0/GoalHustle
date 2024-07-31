@@ -58,8 +58,8 @@ class ArticleController extends Controller
     {
         //Obtener categorías publicas
         $categories = Category::select('id', 'name')
-                        ->where('status','1')
-                        ->get();
+            ->where('status','1')
+            ->get();
         return view('admin.articles.create', compact('categories'));
     }
 
