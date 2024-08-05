@@ -150,12 +150,12 @@ class PlayerController extends Controller
         $columns = ['name', 'team.name', 'number', 'position',];
 
         //Player::with('team') = Player::with('team');
-
+        $filter = Player::query();
         if ($request->input('search.value')) {
-            Player::with('team')->where('name', 'like', '%' . $request->input('search.value') . '%');
+            $filter->with('team')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->input('search.value')) . '%']);
         }
 
-        $countData = Player::with('team')->count();
+        $countData = $filter->with('team')->count();
 
         $orderColumnIndex = $request->input('order.0.column');
         //$orderColumn = $request->input('columns')[$orderColumnIndex]['data'];
@@ -163,13 +163,13 @@ class PlayerController extends Controller
         $orderDir = $request->input('order.0.dir');
 
         if ($orderColumn == 'team.name') {
-            Player::with('team')->join('teams', 'players.team_id', '=', 'teams.id')
+            $filter->with('team')->join('teams', 'players.team_id', '=', 'teams.id')
                   ->orderBy('teams.name', $orderDir);
         } else {
-            Player::with('team')->orderBy($orderColumn, $orderDir);
+            $filter->with('team')->orderBy($orderColumn, $orderDir);
         }
 
-        $players = Player::with('team')->offset($request->input('start'))
+        $players = $filter->with('team')->offset($request->input('start'))
             ->limit($request->input('length'))
             //->orderBy($orderColumn, $orderDir)
             ->get(['players.*']);

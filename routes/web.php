@@ -101,11 +101,14 @@ Route::namespace('App\Http\Controllers')->prefix('admin')->group(function(){
                 ->name('tournamentTeam.search');
         //Games
         Route::post('/games/gamesPerTournament', [GameController::class, 'gamesPerTournament'])
-                ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
+                ->middleware(['auth', 'verified', 'check.admin.permission:games.index'])
                 ->name('games.gamesPerTournament');
         Route::post('/games/generateGames', [GameController::class, 'generateGames'])
-                ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
+                ->middleware(['auth', 'verified', 'check.admin.permission:games.index'])
                 ->name('games.generateGames');
+        Route::post('/games/search', [GameController::class, 'search'])
+                ->middleware(['auth', 'verified', 'check.admin.permission:games.index'])
+                ->name('games.search');
         Route::resource('games', 'GameController')->except('show', 'search', 'gamesPerTournament')
         ->middleware(['auth', 'verified',
                 'check.admin.permission:games.index', 

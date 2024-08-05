@@ -213,19 +213,20 @@ class TournamentController extends Controller
 
     public function search(Request $request){
 
-        //$query = Tournament::with('teams');
+        $filter = Tournament::query();
 
         if ($request->input('search.value')) {
-            Tournament::where('name', 'like', '%' . $request->input('search.value') . '%');
+            //Tournament::where('name', 'like', '%' . $request->input('search.value') . '%');
+            $filter->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->input('search.value')) . '%']);
         }
 
-        $countData = Tournament::count();
+        $countData = $filter->count();
 
         $orderColumnIndex = $request->input('order.0.column');
         $orderColumn = $request->input('columns')[$orderColumnIndex]['data'];
         $orderDir = $request->input('order.0.dir');
 
-        $tournaments = Tournament::offset($request->input('start'))
+        $tournaments = $filter->offset($request->input('start'))
             ->limit($request->input('length'))
             ->orderBy($orderColumn, $orderDir)
             ->get();

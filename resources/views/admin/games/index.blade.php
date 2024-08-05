@@ -160,11 +160,11 @@
                                     @can('games.edit')
                                         <a href="games/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
                                     
-                                    <form action="games/${data}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                                    </form>
+                                        <form action="games/${data}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                                        </form>
                                     @endcan
                                 `;
                             },
@@ -184,12 +184,14 @@
                 flag = 1;
                 
             });
+
+            //search by team name
             function search(){
                 var table = $('#teams-table').DataTable({
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('teams.search') }}',
+                        url: '{{ route('games.search') }}',
                         type: 'POST',
                         data: function(d) {
                             d._token = '{{ csrf_token() }}';
@@ -197,23 +199,40 @@
                         }
                     },
                     columns: [
-                        { data: 'name',
+                        { data: 'tournament',
                             render: function(data, type, row){
                                 return `
-                                    <a href="/team/${row.slug}" target="_blank">${data}</a>
+                                    <a href="/tournament/${row.tournamentSlug}" target="_blank">${data}</a>
+                                `;
+                            }
+                        },
+                        { data: 'homeTeam',
+                            render: function(data, type, row){
+                                return `
+                                    <a href="/team/${row.homeTeamSlug}" target="_blank">${data}</a>
+                                `;
+                            }
+                        },
+                        { data: 'awayTeam',
+                            render: function(data, type, row){
+                                return `
+                                    <a href="/team/${row.awayTeamSlug}" target="_blank">${data}</a>
                                 `;
                             }
                         },
                         {
-                            data: 'slug',
+                            data: 'game',
                             render: function(data, type, row) {
                                 return `
-                                    <a href="teams/${row.game}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                    <form action="teams/${rowl.game}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                                    </form>
+                                    @can('games.edit')
+                                        <a href="games/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    
+                                        <form action="games/${data}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                                        </form>
+                                    @endcan
                                 `;
                             },
                             orderable: false,

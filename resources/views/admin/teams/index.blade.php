@@ -2,7 +2,7 @@
 @section('title', 'Manage players')
 
 @section('content_header')
-    <h2>Manage players</h2>
+    <h2>Manage teams</h2>
 @stop
 
 @section('content')

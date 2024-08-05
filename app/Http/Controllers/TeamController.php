@@ -156,18 +156,20 @@ class TeamController extends Controller
     }
 
     public function search(Request $request){
+        $filter = Team::query();
 
         if ($request->input('search.value')) {
-            Team::where('name', 'like', '%' . $request->input('search.value') . '%');
+           // $filter->where('name', 'like', '%' . $request->input('search.value') . '%');
+            $filter->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->input('search.value')) . '%']);
         }
 
-        $countData = Team::count();
+        $countData = $filter->count();
 
         $orderColumnIndex = $request->input('order.0.column');
         $orderColumn = $request->input('columns')[$orderColumnIndex]['data'];
         $orderDir = $request->input('order.0.dir');
 
-        $teams = Team::offset($request->input('start'))
+        $teams = $filter->offset($request->input('start'))
             ->limit($request->input('length'))
             ->orderBy($orderColumn, $orderDir)
             ->get();

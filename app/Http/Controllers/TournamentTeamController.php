@@ -111,7 +111,8 @@ class TournamentTeamController extends Controller
         ->where('tournament_teams.tournament_id', $request->input('tournament_id'));
 
         if ($request->input('search.value')) {
-            $tournametTeam->where('teams.name', 'like', '%' . $request->input('search.value') . '%');
+            //$tournametTeam->where('teams.name', 'like', '%' . $request->input('search.value') . '%');
+            $tournametTeam->whereRaw('LOWER(teams.name) LIKE ?', ['%' . strtolower($request->input('search.value')) . '%']);
         }
 
         $countData = $tournametTeam->count();
