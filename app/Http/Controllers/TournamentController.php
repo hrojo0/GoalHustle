@@ -20,8 +20,7 @@ class TournamentController extends Controller
      */
     public function index()
     {
-        //$this->authorize('view');
-        $user = Auth::user(); //obtiene información del usuario loggeado
+        //$user = Auth::user(); //obtiene información del usuario loggeado
         $tournaments = Tournament::orderBy('name', 'asc')
             ->paginate(30);
 

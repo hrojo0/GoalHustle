@@ -48,18 +48,29 @@ Route::namespace('App\Http\Controllers')->prefix('admin')->group(function(){
                                 'check.admin.permission:categories.edit', 
                                 'check.admin.permission:categories.destroy'])
                         ->names('categories');
-        //Torneos
-        Route::resource('tournaments', 'TournamentController')->except('show')
-        ->middleware(['auth', 'verified',
-                'check.admin.permission:tournaments.index', 
-                'check.admin.permission:tournaments.create', 
-                'check.admin.permission:tournaments.edit', 
-                'check.admin.permission:tournaments.destroy'
-                ])
-        ->names('tournaments');
-        Route::post('/tournaments/search', [TournamentController::class, 'search'])
-        ->middleware(['auth', 'verified', 'check.admin.permission:tournaments.index'])
-        ->name('tournaments.search');
+        //Torneos... ESTE ES EL MODELO IDEAL DE RUTAS PARA ADMINISTRATOR/AUTHOR
+        Route::group(['middleware' => ['auth', 'verified']], function () {
+                // Routes that only require 'tournaments.index' permission
+                Route::middleware('check.admin.permission:tournaments.index')->group(function () {
+                    Route::get('tournaments', [TournamentController::class, 'index'])->name('tournaments.index');
+                    Route::post('/tournaments/search', [TournamentController::class, 'search'])->name('tournaments.search');
+                });
+            
+                // Routes that require different permissions
+                Route::middleware('check.admin.permission:tournaments.create')->group(function () {
+                    Route::get('tournaments/create', [TournamentController::class, 'create'])->name('tournaments.create');
+                    Route::post('tournaments', [TournamentController::class, 'store'])->name('tournaments.store');
+                });
+            
+                Route::middleware('check.admin.permission:tournaments.edit')->group(function () {
+                    Route::get('tournaments/{tournament}/edit', [TournamentController::class, 'edit'])->name('tournaments.edit');
+                    Route::put('tournaments/{tournament}', [TournamentController::class, 'update'])->name('tournaments.update');
+                });
+            
+                Route::delete('tournaments/{tournament}', [TournamentController::class, 'destroy'])
+                    ->name('tournaments.destroy')
+                    ->middleware('check.admin.permission:tournaments.destroy');
+            });
         //Equipos
         Route::resource('teams', 'TeamController')->except('show')
                         ->middleware(['auth', 'verified',
@@ -89,10 +100,6 @@ Route::namespace('App\Http\Controllers')->prefix('admin')->group(function(){
                 ->middleware(['auth', 'verified', 'check.admin.permission:tournamentTeam.index'])
                 ->name('tournamentTeam.search');
         //Games
-        /*Route::post('/players/search', [PlayerController::class, 'search'])
-                ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
-                ->name('players.search')
-                        ;*/
         Route::post('/games/gamesPerTournament', [GameController::class, 'gamesPerTournament'])
                 ->middleware(['auth', 'verified', 'check.admin.permission:players.index'])
                 ->name('games.gamesPerTournament');

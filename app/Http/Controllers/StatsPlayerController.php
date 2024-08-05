@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Player;
 use App\Models\StatsPlayer;
 use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -50,9 +51,10 @@ class StatsPlayerController extends Controller
         $this->authorize('view', $statsPlayer);
         //Obtener categorías publicas
         $teams = Team::select('id', 'name')
-                        ->orderBy('name')
-                        ->get();
-        return view('admin.stats_player.edit', compact('teams', 'statsPlayer'));
+            ->orderBy('name')
+            ->get();
+        $player = Player::where('player_id', $statsPlayer->id);
+        return view('admin.stats_player.edit', compact('teams', 'statsPlayer','player'));
     }
 
     /**

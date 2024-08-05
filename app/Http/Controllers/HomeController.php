@@ -19,8 +19,8 @@ class HomeController extends Controller
     public function __construct()
     {
         //$this->middleware('auth');
-        if(Auth::check())
-            Auth::login(Auth::user());
+        //if(Auth::check())
+          //  Auth::login(Auth::user());
         
     }
 
@@ -32,7 +32,7 @@ class HomeController extends Controller
     public function index()
     {
         //Obtener articulos publicos (1)
-        $articles = Article::where('status', '1')
+        /*$articles = Article::where('status', '1')
                         ->orderBy('id', 'desc')
                         ->simplePaginate(10);
         
@@ -40,9 +40,10 @@ class HomeController extends Controller
                         ['status', '1'],
                         ['is_featured', '1']
                         ])->paginate(3);
-        $user_name = Auth::user()->name;
+        $user_name = Auth::user()->name;*/
         //return view('home.index', compact('articles', 'navbar'));
-        return view('home', compact('articles', 'navbar', 'user_name'));
+        //return view('home', compact('articles', 'navbar', 'user_name'));
+        return view('xv');
     }
 
     //Todas las categorías

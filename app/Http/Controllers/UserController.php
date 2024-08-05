@@ -63,7 +63,7 @@ class UserController extends Controller
         $user->roles()->sync($request->role);
 
         //redirect se utiliza para que dirija al mismo formulario
-        return redirect()->route('users.edit', $user)->with('success-update', 'Rol establecido con éxito');
+        return redirect()->route('users.edit', $user)->with('success-update', 'The user '.$user->name.' now is '.$request->role);
     }
 
     /**

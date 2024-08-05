@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GameRequest;
 use App\Models\Game;
+use App\Models\Player;
+use App\Models\StatsPlayer;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentTeam;
@@ -68,9 +70,36 @@ class GameController extends Controller
         $game['home_goals'] = 0;
         $game['away_goals'] = 0;
 
-        Game::create($game);
+        $game_created = Game::create($game);
         $home_team = Team::where('id', $request->home_team)->first();
         $away_team = Team::where('id', $request->away_team)->first();
+
+
+        //Generate defeault stats for the game
+        $home_players = Player::where('team_id', $request->home_team);
+        $away_players = Player::where('team_id', $request->home_team);
+
+        foreach($home_players as $player){
+            StatsPlayer::create([
+                'game_id' => $game_created->id,
+                'player_id' => $player->id,
+                'goals' => 0,
+                'assists' => 0,
+                'yellow_cards' => 0,
+                'red_card' => 0,
+            ]);
+        }
+        foreach($away_players as $player){
+            StatsPlayer::create([
+                'game_id' => $game_created->id,
+                'player_id' => $player->id,
+                'goals' => 0,
+                'assists' => 0,
+                'yellow_cards' => 0,
+                'red_card' => 0,
+            ]);
+        }
+
         return redirect()->action([GameController::class, 'index'])
         ->with('success-create', 'Game '.$home_team->name.' vs. '.$away_team->name.' succesfully created');
     }
@@ -87,14 +116,22 @@ class GameController extends Controller
         $teams = Team::select('id', 'name')
             ->orderBy('name', 'asc')
             ->get();
-        $allow_score = $game->matchday <= now() ? true : false;
-        return view('admin.games.edit', compact('game','tournaments' ,'teams', 'allow_score'));
-    }
+        $allow_stats = $game->matchday <= now() ? true : false;
+        // Retrieve players from both teams and eager load their stats for this game
+        $home_team_players = Player::where('team_id', $game->home_team_id)
+            ->with(['statsPlayer' => function ($query) use ($game) {
+                $query->where('game_id', $game->id);
+            }])->orderBy('name')->get();
+
+        $away_team_players = Player::where('team_id', $game->away_team_id)
+            ->with(['statsPlayer' => function ($query) use ($game) {
+                $query->where('game_id', $game->id);
+            }])->orderBy('name')->get();
+
+        return view('admin.games.edit', compact('game', 'tournaments', 'teams', 'allow_stats', 'home_team_players', 'away_team_players'));
+}
 
     public function update(GameRequest $request, Game $game){
-        //tests with
-        //tournament HR, hometeam 16 Dicki awayteam 20 Little, actual record
-        //tournament HR, hometeam 2 Hessel awayteam 20 Little, new record
         
         //$this->authorize('update', $article);
 
@@ -112,7 +149,25 @@ class GameController extends Controller
                 'away_goals' => $away_goals,
             ]);
 
-            //redireccionar a articles index
+            if ($request->has('player_stats')) {
+                    foreach ($request->input('player_stats') as $player_id => $stats) {
+                        $statsPlayer = StatsPlayer::updateOrCreate(
+                            [
+                                'game_id' => $game->id,
+                                'player_id' => $player_id
+                            ],
+                            [
+                                'goals' => $stats['goals'] ?? 0,
+                                'assists' => $stats['assists'] ?? 0,
+                                'yellow_cards' => $stats['yellow_cards'] ?? 0,
+                                'red_card' => $stats['red_card'] ?? 0,
+                            ]
+                        );
+                    }
+
+            }
+
+            
             return redirect()->action([GameController::class, 'index'])
             ->with('success-update', 'Game succesfully updated');
         } catch(QueryException $exception){

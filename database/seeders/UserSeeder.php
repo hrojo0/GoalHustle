@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             'name' => 'Mizraim Salazar',
             'email' => 'm.sala@gmail.com',
             'password' => Hash::make('1234567890')
-        ])->assignRole('User');
+        ])->assignRole('Author');
 
         User::factory(10)->create();
     }

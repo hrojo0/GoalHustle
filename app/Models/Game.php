@@ -25,4 +25,17 @@ class Game extends Model
     {
         return $this->belongsTo(Team::class, 'away_team_id');
     }
+
+    public function players()
+    {
+        return $this->hasManyThrough(
+            Player::class,
+            StatsPlayer::class,
+            'game_id', // Foreign key on StatsPlayer table...
+            'id', // Foreign key on Player table...
+            'id', // Local key on Game table...
+            'player_id' // Local key on StatsPlayer table...
+        );
+    }
+
 }

@@ -81,7 +81,6 @@
                         render: function(data, type, row) {
                             return `
                                 <a href="players/${data}/edit" class="btn btn-primary btn-sm">Edit Bio</a>
-                                <a href="stats_player/${data}/edit" class="btn btn-primary btn-sm">Edit Stats</a>
                                 <form action="players/${data}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
