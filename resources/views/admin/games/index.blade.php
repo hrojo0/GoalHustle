@@ -157,12 +157,15 @@
                             data: 'game',
                             render: function(data, type, row) {
                                 return `
-                                    <a href="games/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    @can('games.edit')
+                                        <a href="games/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    
                                     <form action="games/${data}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <input type="submit" value="Delete" class="btn btn-danger btn-sm">
                                     </form>
+                                    @endcan
                                 `;
                             },
                             orderable: false,

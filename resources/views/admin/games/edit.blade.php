@@ -38,7 +38,7 @@
 
                 <div class="form-group">
                     <label>Round</label>
-                    <input type="number" class="form-control" id="round" name='round' placeholder="Round" value="{{ $game->round }}">
+                    <input type="number" min="0" class="form-control" id="round" name='round' placeholder="Round" value="{{ $game->round }}">
                     <x-input-error :messages="$errors->get('round')" class="mt-2 text-danger" />
                 </div>
                 <div class="form-group">
@@ -77,10 +77,10 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="home-team">
-                                <h4 id="home-team-name">{{ $game->awayTeam->name }}</h4>
+                                <h4 id="home-team-name">{{ $game->homeTeam->name }}</h4>
                                 <div class="form-group">
                                     <label>Home Team Goals</label>
-                                    <input type="number" class="form-control" id="home_goals" name='home_goals' placeholder="Home goals" value="{{ $game->home_goals }}">
+                                    <input type="number" min="0"  class="form-control" id="home_goals" name='home_goals' placeholder="Home goals" value="{{ $game->home_goals }}">
                                     <x-input-error :messages="$errors->get('home_goals')" class="mt-2 text-danger" />
                                 </div>
                                 <h5>Players stats</h5>
@@ -102,9 +102,9 @@
                                             <tr>
                                                 <td><h6>{{ $player->name }}</h6></td>
                                                 <td><input placeholder="Goals" type="number" class="form-control" name="player_stats[{{ $player->id }}][goals]" value="{{ $playerStats->goals }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][assists]" value="{{ $playerStats->assists ?? 0 }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][yellow_cards]" value="{{ $playerStats->yellow_cards ?? 0 }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][red_card]" value="{{ $playerStats->red_card ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][assists]" value="{{ $playerStats->assists ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][yellow_cards]" value="{{ $playerStats->yellow_cards ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][red_card]" value="{{ $playerStats->red_card ?? 0 }}"></td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -115,7 +115,7 @@
                                 <h4 id="away-team-name">{{ $game->awayTeam->name }}</h4>
                                 <div class="form-group">
                                     <label>Away Team Goals</label>
-                                    <input type="number" class="form-control" id="away_goals" name='away_goals' placeholder="Away goals" value="{{ $game->away_goals }}">
+                                    <input type="number" min="0" class="form-control" id="away_goals" name='away_goals' placeholder="Away goals" value="{{ $game->away_goals }}">
                                     <x-input-error :messages="$errors->get('away_goals')" class="mt-2 text-danger" />
                                 </div>
                                 <h5>Players stats</h5>
@@ -137,9 +137,9 @@
                                             <tr>
                                                 <td><h6>{{ $player->name }}</h6></td>
                                                 <td><input placeholder="Goals" type="number" class="form-control" name="player_stats[{{ $player->id }}][goals]" value="{{ $playerStats->goals ?? 0 }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][assists]" value="{{ $playerStats->assists ?? 0 }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][yellow_cards]" value="{{ $playerStats->yellow_cards ?? 0 }}"></td>
-                                                <td><input type="number" class="form-control" name="player_stats[{{ $player->id }}][red_card]" value="{{ $playerStats->red_card ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][assists]" value="{{ $playerStats->assists ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][yellow_cards]" value="{{ $playerStats->yellow_cards ?? 0 }}"></td>
+                                                <td><input type="number" min="0" class="form-control" name="player_stats[{{ $player->id }}][red_card]" value="{{ $playerStats->red_card ?? 0 }}"></td>
                                             </tr>
                                         @endforeach
                                     </tbody>

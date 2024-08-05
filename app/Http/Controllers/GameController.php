@@ -77,7 +77,7 @@ class GameController extends Controller
 
         //Generate defeault stats for the game
         $home_players = Player::where('team_id', $request->home_team);
-        $away_players = Player::where('team_id', $request->home_team);
+        $away_players = Player::where('team_id', $request->away_team);
 
         foreach($home_players as $player){
             StatsPlayer::create([
@@ -239,6 +239,11 @@ class GameController extends Controller
         try{
             $tournament = Tournament::findOrFail($request->input('tournament_id'));
         
+            $games_deleted = Game::where('tournament_id', $tournament->id)->get();
+            foreach($games_deleted as $game_deleted){
+                StatsPlayer::where('game_id',$game_deleted->id)->delete();
+            }
+            
             Game::where('tournament_id', $tournament->id)->delete();
         
             $teams = TournamentTeam::where('tournament_id', $tournament->id)->pluck('team_id')->toArray();
@@ -271,7 +276,7 @@ class GameController extends Controller
                         $matchday->modify("+{$randomPlusDays} days");
                         $matchday = $matchday->format('Y-m-d');
         
-                        Game::create([
+                        $game_created = Game::create([
                             'tournament_id' => $tournament->id,
                             'home_team_id' => $homeTeam,
                             'away_team_id' => $awayTeam,
@@ -280,6 +285,31 @@ class GameController extends Controller
                             'home_goals' => 0,
                             'away_goals' => 0,
                         ]);
+
+                        //Generate defeault stats for the game
+                        $home_players = Player::where('team_id', $homeTeam)->get();
+                        $away_players = Player::where('team_id', $awayTeam)->get();
+
+                        foreach($home_players as $player){
+                            StatsPlayer::create([
+                                'game_id' => $game_created->id,
+                                'player_id' => $player->id,
+                                'goals' => 0,
+                                'assists' => 0,
+                                'yellow_cards' => 0,
+                                'red_card' => 0,
+                            ]);
+                        }
+                        foreach($away_players as $player){
+                            StatsPlayer::create([
+                                'game_id' => $game_created->id,
+                                'player_id' => $player->id,
+                                'goals' => 0,
+                                'assists' => 0,
+                                'yellow_cards' => 0,
+                                'red_card' => 0,
+                            ]);
+                        }
                     
                 }
                 $dateInitialRound->modify('next friday');

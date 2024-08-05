@@ -74,12 +74,14 @@
                         data: 'slug',
                         render: function(data, type, row) {
                             return `
-                                <a href="teams/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                <form action="teams/${data}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                                </form>
+                                @can('teams.edit')
+                                    <a href="teams/${data}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                    <form action="teams/${data}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                                    </form>
+                                @endcan
                             `;
                         },
                         orderable: false,

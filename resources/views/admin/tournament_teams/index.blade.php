@@ -74,12 +74,14 @@
                         data: 'slug',
                         render: function(data, type, row) {
                             return `
-                                <a href="/admin/tournamentTeams/${row.id}/edit" class="btn btn-primary btn-sm">Change team</a>
-                                <form action="/admin/tournamentTeams/${row.id}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                                </form>
+                                @can('tournamentTeam.edit')
+                                    <a href="/admin/tournamentTeams/${row.id}/edit" class="btn btn-primary btn-sm">Change team</a>
+                                    <form action="/admin/tournamentTeams/${row.id}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                                    </form>
+                                @endcan
                             `;
                         },
                         orderable: false,

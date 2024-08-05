@@ -80,12 +80,14 @@
                         data: 'id',
                         render: function(data, type, row) {
                             return `
-                                <a href="players/${data}/edit" class="btn btn-primary btn-sm">Edit Bio</a>
-                                <form action="players/${data}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                                </form>
+                                @can('players.edit')
+                                    <a href="players/${data}/edit" class="btn btn-primary btn-sm">Edit Bio</a>
+                                    <form action="players/${data}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                                    </form>
+                                @endcan
                             `;
                         },
                         orderable: false,
