@@ -185,14 +185,75 @@ class GameController extends Controller
     }
 
     public function gamesPerTournament(Request $request){
-        
-        if(!$request->input('search.value')){ //if search input??
-            $queryGames = Game::query();
-            if ($request->input('tournament')) {
-                $queryGames->where('tournament_id', $request->input('tournament'));
-            }
-            
-            $countData = $queryGames->count();
+        $filter = Game::query()
+            ->join('teams as home_teams', 'games.home_team_id', '=', 'home_teams.id')
+            ->join('teams as away_teams', 'games.away_team_id', '=', 'away_teams.id');
+
+        if ($request->input('tournament')) {
+            $filter->where('tournament_id', $request->input('tournament'));
+        }
+
+        if ($request->input('search.value')) {
+            $searchValue = strtolower($request->input('search.value'));
+            $filter->where(function ($query) use ($searchValue) {
+                $query->whereRaw('LOWER(home_teams.name) LIKE ?', ['%' . $searchValue . '%'])
+                    ->orWhereRaw('LOWER(away_teams.name) LIKE ?', ['%' . $searchValue . '%']);
+            });
+        }
+
+        // Get total and filtered records count
+        $countTotal = Game::count();
+        $countFiltered = $filter->count();
+
+        // Determine order column and direction
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumnName = $request->input('columns')[$orderColumnIndex]['data'];
+
+        // Map DataTables column to database column
+        $columnMap = [
+            'tournament' => 'tournament_id',
+            'homeTeam' => 'home_teams.name',
+            'awayTeam' => 'away_teams.name',
+            'round' => 'round',
+        ];
+
+        $orderColumn = $columnMap[$orderColumnName];
+        $orderDir = $request->input('order.0.dir');
+
+        // Get paginated and ordered games
+        $games = $filter->offset($request->input('start'))
+            ->limit($request->input('length'))
+            ->orderBy($orderColumn, $orderDir)
+            ->get();
+
+        $data = [];
+        foreach ($games as $game) {
+            $data[] = [
+                'game' => $game->id,
+                'tournament' => $game->tournament->name,
+                'tournamentSlug' => $game->tournament->slug,
+                'homeTeam' => $game->homeTeam->name,
+                'homeTeamSlug' => $game->homeTeam->slug,
+                'awayTeam' => $game->awayTeam->name,
+                'awayTeamSlug' => $game->awayTeam->slug,
+                'round' => $game->round,
+            ];
+        }
+
+        $json_data = [
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($countTotal),
+            "recordsFiltered" => intval($countFiltered),
+            "data" => $data
+        ];
+
+        return response()->json($json_data);
+    }
+
+
+
+    public function search($filter, $request){
+        $countData = $filter->count();
             
             $orderColumnIndex = $request->input('order.0.column');
             $orderColumnName = $request->input('columns')[$orderColumnIndex]['data'];
@@ -200,72 +261,19 @@ class GameController extends Controller
             // Map the DataTables column to the actual database column
             $columnMap = [
                 'tournament' => 'tournament_id',
-                'homeTeam' => 'home_team_id',
-                'awayTeam' => 'away_team_id'
+                'homeTeam' => 'home_teams.name',
+                'awayTeam' => 'away_teams.name',
+                'round' => 'round',
             ];
 
             $orderColumn = $columnMap[$orderColumnName];
-            $orderDir = $request->input('order.0.dir');
-
-            $games = $queryGames->offset($request->input('start'))
-                ->limit($request->input('length'))
-                ->orderBy($orderColumn, $orderDir)
-                ->get();
-    
-            $data = [];
-            foreach ($games as $game) {
-                $data[] = [
-                    'game' => $game->id,
-                    'tournament' => $game->tournament->name,
-                    'tournamentSlug' => $game->tournament->slug,
-                    'homeTeam' => $game->homeTeam->name,
-                    'homeTeamSlug' => $game->homeTeam->slug,
-                    'awayTeam' => $game->awayTeam->name,
-                    'awayTeamSlug' => $game->awayTeam->slug,
-                ];
-            }
-    
-            $json_data = [
-                "draw" => intval($request->input('draw')),
-                "recordsTotal" => intval($countData),
-                "recordsFiltered" => intval($countData),
-                "data" => $data
-            ];
-            
-        } else {
-            $filter = Game::query()->join('teams as home_teams', 'games.home_team_id', '=', 'home_teams.id')
-            ->join('teams as away_teams', 'games.away_team_id', '=', 'away_teams.id')->where('tournament_id', $request->input('tournament'));
-            //$countData = $filter->count();
-
-
-            if ($request->input('search.value')) {
-                $searchValue = strtolower($request->input('search.value'));
-                $filter->where(function($query) use ($searchValue) {
-                    $query->whereRaw('LOWER(home_teams.name) LIKE ?', ['%' . $searchValue . '%'])
-                          ->orWhereRaw('LOWER(away_teams.name) LIKE ?', ['%' . $searchValue . '%']);
-                });
-            }
-
-            $countData = $filter->count();
-
-            $orderColumnIndex = $request->input('order.0.column');
-            $orderColumnName = $request->input('columns')[$orderColumnIndex]['data'];
-    
-            // Map the DataTables column to the actual database column
-            $columnMap = [
-                'tournament' => 'tournament_id',
-                'homeTeam' => 'home_team_id',
-                'awayTeam' => 'away_team_id'
-            ];
-
-            $orderColumn = $columnMap[$orderColumnName];
-            $orderDir = $request->input('order.0.dir');
+            $orderDir = $request->input('order.0.dir'); 
 
             $games = $filter->offset($request->input('start'))
                 ->limit($request->input('length'))
                 ->orderBy($orderColumn, $orderDir)
                 ->get();
-
+    
             $data = [];
             foreach ($games as $game) {
                 $data[] = [
@@ -276,20 +284,16 @@ class GameController extends Controller
                     'homeTeamSlug' => $game->homeTeam->slug,
                     'awayTeam' => $game->awayTeam->name,
                     'awayTeamSlug' => $game->awayTeam->slug,
+                    'round' => $game->round,
                 ];
             }
-
+    
             $json_data = [
                 "draw" => intval($request->input('draw')),
                 "recordsTotal" => intval($countData),
                 "recordsFiltered" => intval($countData),
                 "data" => $data
             ];
-
-            //$json_data = $countData;
-        }
-
-        return response()->json($json_data);
     }
 
     public function generateGames(Request $request){
@@ -381,41 +385,6 @@ class GameController extends Controller
         }
     }
 
-    public function search(Request $request){
-        $filter = Game::query();
-
-        if ($request->input('search.value')) {
-            $filter->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->input('search.value')) . '%']);
-        }
-
-        $countData = $filter->count();
-
-        $orderColumnIndex = $request->input('order.0.column');
-        $orderColumn = $request->input('columns')[$orderColumnIndex]['data'];
-        $orderDir = $request->input('order.0.dir');
-
-        $teams = $filter->offset($request->input('start'))
-            ->limit($request->input('length'))
-            ->orderBy($orderColumn, $orderDir)
-            ->get();
-
-        $data = [];
-        foreach ($teams as $team) {
-            $data[] = [
-                'name' => $team->name,
-                'slug' => $team->slug,
-            ];
-        }
-
-        $json_data = [
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($countData),
-            "recordsFiltered" => intval($countData),
-            "data" => $data
-        ];
-
-        return response()->json($json_data);
-    }
     
     
 }

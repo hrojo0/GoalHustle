@@ -115,7 +115,7 @@
                 $('#card-body').append(`
                         <table id="games-table" class="table table-striped">
                             <thead>
-                                <tr><th>Tournament</th><th>Home Team</th><th>Away Team</th><th></th>
+                                <tr><th>Tournament</th><th>Round</th><th>Home Team</th><th>Away Team</th><th></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -139,6 +139,7 @@
                                 `;
                             }
                         },
+                        { data: 'round'},
                         { data: 'homeTeam',
                             render: function(data, type, row){
                                 return `
