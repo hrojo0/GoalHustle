@@ -152,7 +152,9 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-        //
+        $team->delete();
+        return redirect()->action([TeamController::class, 'index'], compact('game'))
+        ->with('success-delete', $team->name.' deleted');
     }
 
     public function search(Request $request){

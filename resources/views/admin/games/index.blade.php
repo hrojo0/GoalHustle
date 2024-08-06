@@ -187,7 +187,7 @@
 
             //search by team name
             function search(){
-                var table = $('#teams-table').DataTable({
+                table = $('#teams-table').DataTable({
                     processing: true,
                     serverSide: true,
                     ajax: {
@@ -248,11 +248,9 @@
                         searchPlaceholder: "Search players by name"
                     }
                 });
-             }
+            }
 
-            $('#search').on('keyup', function() {
-                table.search(this.value).draw();
-            });
+            
             setTimeout(function(){
                 $('.alert-info').fadeOut(); 
             }, 5000);

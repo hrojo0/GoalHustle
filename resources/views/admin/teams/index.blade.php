@@ -59,7 +59,6 @@
                     type: 'POST',
                     data: function(d) {
                         d._token = '{{ csrf_token() }}';
-                        d.query = $('#search').val();
                     }
                 },
                 columns: [
@@ -98,9 +97,6 @@
                 }
             });
 
-            $('#search').on('keyup', function() {
-                table.search(this.value).draw();
-            });
         });
     </script>
 @stop

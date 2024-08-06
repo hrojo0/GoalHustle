@@ -171,12 +171,7 @@ class PlayerController extends Controller
 
         $players = $filter->with('team')->offset($request->input('start'))
             ->limit($request->input('length'))
-            //->orderBy($orderColumn, $orderDir)
             ->get(['players.*']);
-        /*$players = Player::with('team')->offset($request->input('start'))
-            ->limit($request->input('length'))
-            ->orderBy('name', 'asc')
-            ->get();*/
 
         $data = [];
         foreach ($players as $player) {
