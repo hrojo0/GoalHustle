@@ -10,8 +10,6 @@ Is a web application made focus on a sports blog to show news related and got th
 - Team general info with the players of each team, top socores and assisters, next matches and latest results.
 - Bio of each player registered on the platform with his own stats provided for goals, assists, yellow and red cards.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
 ## Blog section
 
 The blog section is made for an easy organization of categories, authors, articles featured, published articles and comments management.
@@ -22,7 +20,9 @@ Each article can be commented and rated with a max five stars, where the users o
 
 The admin panel for the users is setup by user level where each of them can access and visualize the page according to their level.
 
-### Admin user
-The admin user can control every aspect of the applicaction, that means can view every article, comment, category, user, tournament, team, player, stats and matches that are save in the database.
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Edit artciles and comments on them.
+- Edit all categories on the app.
+- Manage tournaments and the paticipant teams on them.
+- Manage teams with basic information.
+- Manage information players and their team.
+- Manage games of each tournament, where based on the rounds especified it has a function to generate the matches between them. Plus the option to edit/add each game separately. When editing the game if the date has passed it allows you to add the stats of the match such as the final score and the goals, assists, yellow and red cards for each player registered on the teams.
