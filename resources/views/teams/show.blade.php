@@ -40,70 +40,73 @@ Goal Hustle | {{$team->name}}
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="max-content">
-                                <tr>
-                                    <td>
-                                        <div class="uk-position-relative inline-flex">
-                                            <div class="col-6">
-                                                <a href="{{ route('player.show', $topScorer->player_id) }}">
-                                                    <x-bladewind::avatar
-                                                        image="{{ $topScorer->photo ? asset($topScorer->photo) : asset('img/player-avatar.jpg') }}"
-                                                        size="big" />
-                                                </a>
-                                            </div>
-                                            <div class="ml-10 col-xs-offset-1">
-                                                <p class="m-0 text-blue-700">Striker</p>
-                                                <a href="{{ route('player.show', $topScorer->player_id) }}">
-                                                    <div class="m-0 text-3xl text-white inline-flex">
-                                                        <p class="max-content">{{ $topScorer->name }}</p>
-                                                        <p class="mx-1">{{ $topScorer->total_goals }}</p>
-                                                        <p>
-                                                            @if ($topScorer->total_goals > 1)
-                                                                goals
-                                                            @else
-                                                                goal
-                                                            @endif
-                                                        </p>
-                                                    </div>
+                            
+                            @if($topScorer && $topAssister)
+                                <tbody class="max-content">
+                                    <tr>
+                                        <td>
+                                            <div class="uk-position-relative inline-flex">
+                                                <div class="col-6">
+                                                    <a href="{{ route('player.show', $topScorer->player_id) }}">
+                                                        <x-bladewind::avatar
+                                                            image="{{ $topScorer->photo ? asset($topScorer->photo) : asset('img/player-avatar.jpg') }}"
+                                                            size="big" />
+                                                    </a>
+                                                </div>
+                                                <div class="ml-10 col-xs-offset-1">
+                                                    <p class="m-0 text-blue-700">Striker</p>
+                                                    <a href="{{ route('player.show', $topScorer->player_id) }}">
+                                                        <div class="m-0 text-3xl text-white inline-flex">
+                                                            <p class="max-content">{{ $topScorer->name }}</p>
+                                                            <p class="mx-1">{{ $topScorer->total_goals }}</p>
+                                                            <p>
+                                                                @if ($topScorer->total_goals > 1)
+                                                                    goals
+                                                                @else
+                                                                    goal
+                                                                @endif
+                                                            </p>
+                                                        </div>
 
-                                                </a>
-                                            </div>
+                                                    </a>
+                                                </div>
 
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="mt-1">
-                                    <td>
-                                        <div class="uk-position-relative inline-flex">
-                                            <div class="col-6">
-                                                <a href="{{ route('player.show', $topAssister->player_id) }}">
-                                                    <x-bladewind::avatar
-                                                        image="{{ $topAssister->photo ? asset($topAssister->photo) : asset('img/player-avatar.jpg') }}"
-                                                        size="big" />
-                                                </a>
                                             </div>
-                                            <div class="ml-10 col-xs-offset-1">
-                                                <p class="m-0 text-blue-700">Assister</p>
-                                                <a href="{{ route('player.show', $topAssister->player_id) }}">
-                                                    <div class="m-0 text-3xl text-white inline-flex">
-                                                        <p class="max-content">{{ $topAssister->name }}</p>
-                                                        <p class="mx-1">{{ $topAssister->total_assists }}</p>
-                                                        <p>
-                                                            @if ($topAssister->total_assists > 1)
-                                                                assists
-                                                            @else
-                                                                assist
-                                                            @endif
-                                                        </p>
-                                                    </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mt-1">
+                                        <td>
+                                            <div class="uk-position-relative inline-flex">
+                                                <div class="col-6">
+                                                    <a href="{{ route('player.show', $topAssister->player_id) }}">
+                                                        <x-bladewind::avatar
+                                                            image="{{ $topAssister->photo ? asset($topAssister->photo) : asset('img/player-avatar.jpg') }}"
+                                                            size="big" />
+                                                    </a>
+                                                </div>
+                                                <div class="ml-10 col-xs-offset-1">
+                                                    <p class="m-0 text-blue-700">Assister</p>
+                                                    <a href="{{ route('player.show', $topAssister->player_id) }}">
+                                                        <div class="m-0 text-3xl text-white inline-flex">
+                                                            <p class="max-content">{{ $topAssister->name }}</p>
+                                                            <p class="mx-1">{{ $topAssister->total_assists }}</p>
+                                                            <p>
+                                                                @if ($topAssister->total_assists > 1)
+                                                                    assists
+                                                                @else
+                                                                    assist
+                                                                @endif
+                                                            </p>
+                                                        </div>
 
-                                                </a>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                </tr>
-                            </tbody>
+                                    </tr>
+                                </tbody>
+                            @endif
                         </table>
                     </div>
 
@@ -120,87 +123,96 @@ Goal Hustle | {{$team->name}}
                                 <div class="uk-panel">
                                     <div class="uk-container uk-container-center">
                                         <div class="uk-grid uk-grid-collapse">
+                                            @if(count($nextMatches) !== 0)
                                             <div class="uk-width-medium-1-2 uk-width-small-1-1 va-single-next-match">
                                                 <div class="va-main-next-wrap">
                                                     <div class="main-next-match-title"><em>Next <span>Game</span></em>
                                                     </div>
-                                                    <div class="match-list-single">
+                                                    
+                                                    <div class="match-list-single" style="margin-top: 2rem;">
                                                         <div class="match-list-item">
                                                             
-                                                            <div class="clear"></div>
-                                                            <div class="logo">
-                                                                @php
-                                                                    $date = Carbon\Carbon::parse($nextMatches[0]->matchday);
-                                                                    $date->locale('es');
-                                                                    $formattedDate = $date->translatedFormat('d \d\e F, Y');
-                                                                @endphp
-                                                                <a href="match-single.html">
-                                                                    <img src="{{ $nextMatches[0]->homeTeam->logo ? asset($nextMatches[0]->homeTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
-                                                                        alt="{{ $nextMatches[0]->homeTeam->name }}"
-                                                                        title="{{ $nextMatches[0]->homeTeam->name }}">
-                                                                </a>
-                                                            </div>
-                                                            <div class="team-name">{{ $nextMatches[0]->homeTeam->name }}</div>
-                                                            <div class="versus">VS</div>
+                                                                <div class="clear"></div>
+                                                                <div class="logo">
+                                                                    @php
+                                                                        $date = Carbon\Carbon::parse($nextMatches[0]->matchday);
+                                                                        $formattedDate = $date->translatedFormat('F d, Y');
+                                                                    @endphp
+                                                                    <a href="match-single.html">
+                                                                        <img src="{{ $nextMatches[0]->homeTeam->logo ? asset($nextMatches[0]->homeTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
+                                                                            alt="{{ $nextMatches[0]->homeTeam->name }}"
+                                                                            title="{{ $nextMatches[0]->homeTeam->name }}">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="team-name">{{ $nextMatches[0]->homeTeam->name }}</div>
+                                                                <div class="versus">VS</div>
 
-                                                            <div class="team-name">{{ $nextMatches[0]->awayTeam->name }}</div>
-                                                            <div class="logo">
-                                                                <a href="match-single.html">
-                                                                    <img src="{{ $nextMatches[0]->awayTeam->logo ? asset($nextMatches[0]->awayTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
-                                                                        alt="{{ $nextMatches[0]->awayTeam->name }}"
-                                                                        title="{{ $nextMatches[0]->awayTeam->name }}">
-                                                                </a>
-                                                            </div>
-                                                            <div class="clear"></div>
-                                                            <div class="date">{{ $formattedDate }}</div>
-                                                            <div class="clear"></div>
-                                                            <div class="location">
-                                                                <a href="{{ route('tournaments.show', $nextMatches[0]->tournament->slug) }}">
-                                                                    <address>{{ $nextMatches[0]->tournament->name }}<br><br></address>
-                                                                </a>
-                                                            </div>
+                                                                <div class="team-name">{{ $nextMatches[0]->awayTeam->name }}</div>
+                                                                <div class="logo">
+                                                                    <a href="match-single.html">
+                                                                        <img src="{{ $nextMatches[0]->awayTeam->logo ? asset($nextMatches[0]->awayTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
+                                                                            alt="{{ $nextMatches[0]->awayTeam->name }}"
+                                                                            title="{{ $nextMatches[0]->awayTeam->name }}">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="clear"></div>
+                                                                <div class="date">{{ $formattedDate }}</div>
+                                                                <div class="clear"></div>
+                                                                <div class="location">
+                                                                    <a href="{{ route('tournaments.show', $nextMatches[0]->tournament->slug) }}">
+                                                                        <address>{{ $nextMatches[0]->tournament->name }}<br><br></address>
+                                                                    </a>
+                                                                </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             </div>
+                                            @endif
 
 
                                             <div class="uk-width-medium-1-2 uk-width-small-1-1 va-list-next-match">
                                                 <div class="match-list-wrap">
-                                                    @foreach ($nextMatches as $nextMatch)
-                                                        @if(!$loop->first)
-                                                        @php
-                                                            $date = Carbon\Carbon::parse($nextMatch->matchday);
-                                                            $date->locale('es');
-                                                            $formattedDate = $date->translatedFormat('d \d\e F, Y');
-                                                        @endphp
-                                                        <div class="match-list-item alt">
-                                                            <div class="date">{{ $formattedDate }}</div>
-                                                            <div class="wrapper">
-                                                                <div class="logo logo-next-match">
-                                                                    <a href="{{ route('team.show', $nextMatch->homeTeam->slug) }}">
-                                                                        <img src="{{ $nextMatch->homeTeam->logo ? asset($nextMatch->homeTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
-                                                                            alt="{{ $nextMatch->homeTeam->name }}"
-                                                                            title="{{ $nextMatch->homeTeam->name }}">
-                                                                    </a>
-                                                                </div>
-                                                                
-                                                                <div class="team-name">{{ $nextMatch->homeTeam->name }}</div>
-                                                                <div class="versus">VS</div>
+                                                    @if(count($nextMatches) !== 0)
+                                                        @foreach ($nextMatches as $nextMatch)
+                                                            @if(!$loop->first)
+                                                            @php
+                                                                $date = Carbon\Carbon::parse($nextMatch->matchday);
+                                                                $formattedDate = $date->translatedFormat('m/d/Y');
+                                                            @endphp
+                                                            <div class="match-list-item alt">
+                                                                <div class="date">{{ $formattedDate }}</div>
+                                                                <div class="wrapper">
+                                                                    <div class="logo logo-next-match">
+                                                                        <a href="{{ route('team.show', $nextMatch->homeTeam->slug) }}">
+                                                                            <img src="{{ $nextMatch->homeTeam->logo ? asset($nextMatch->homeTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
+                                                                                alt="{{ $nextMatch->homeTeam->name }}"
+                                                                                title="{{ $nextMatch->homeTeam->name }}">
+                                                                        </a>
+                                                                    </div>
+                                                                    
+                                                                    <div class="team-name">{{ $nextMatch->homeTeam->name }}</div>
+                                                                    <div class="versus">VS</div>
 
-                                                                <div class="team-name">{{ $nextMatch->awayTeam->name }}</div>
-                                                                <div class="logo logo-next-match">
-                                                                    <a href="{{ route('team.show', $nextMatch->awayTeam->slug) }}">
-                                                                        <img src="{{ $nextMatch->awayTeam->logo ? asset($nextMatch->awayTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
-                                                                            alt="{{ $nextMatch->awayTeam->name }}"
-                                                                            title="{{ $nextMatch->awayTeam->name }}">
-                                                                    </a>
+                                                                    <div class="team-name">{{ $nextMatch->awayTeam->name }}</div>
+                                                                    <div class="logo logo-next-match">
+                                                                        <a href="{{ route('team.show', $nextMatch->awayTeam->slug) }}">
+                                                                            <img src="{{ $nextMatch->awayTeam->logo ? asset($nextMatch->awayTeam->logo) : asset('img/team.png') }}" class="img-polaroid"
+                                                                                alt="{{ $nextMatch->awayTeam->name }}"
+                                                                                title="{{ $nextMatch->awayTeam->name }}">
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <div class="match-list-item alt">
+                                                            <div class="date">
+                                                                There's no more upcoming games.
+                                                            </div>
                                                         </div>
-                                                        @endif
-                                                    @endforeach
-
+                                                    @endif
 
                                                 </div>
                                             </div>
@@ -227,6 +239,7 @@ Goal Hustle | {{$team->name}}
                                             <a draggable="false" href="/" class="uk-slidenav uk-slidenav-contrast uk-slidenav-next" data-uk-slider-item="next"></a>
                                         </div>
                                     </div>
+                                    @if(count($teamTournaments) !== 0)
                                     <div class="uk-slider-container">
                                         <ul class="uk-slider uk-grid uk-grid-width-large-1-2">
                                             @foreach ($teamTournaments as $teamTournament)
@@ -245,6 +258,9 @@ Goal Hustle | {{$team->name}}
                                             @endforeach
                                         </ul>
                                     </div>
+                                    @else
+                                    The teams is not registered to any tournament yet.
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -253,6 +269,7 @@ Goal Hustle | {{$team->name}}
                 <!-- end tournaments registered -->
 
                 <!-- list of players -->
+                
                 <div class="list-players-wrapper">
                     <div class="uk-sticky-placeholder">
                         <div class="button-group filter-button-group" data-uk-sticky="{top:70, boundary: true}">
@@ -271,6 +288,7 @@ Goal Hustle | {{$team->name}}
                             </div>
                         </div>
                     </div>
+                    @if(count($players) !== 0)
                     <div class="list-players-wrap" id="boundary">
                         <div class="uk-container uk-container-center alt">
                             <div class="uk-grid grid1 players-list">
@@ -343,6 +361,9 @@ Goal Hustle | {{$team->name}}
                             </div>
                         </div>
                     </div>
+                    @else
+                    The teams hasn't players registered yet.
+                    @endif
                 </div>
                 <!-- end list of players -->
 

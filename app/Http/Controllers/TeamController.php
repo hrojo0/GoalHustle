@@ -105,7 +105,7 @@ class TeamController extends Controller
         $teamTournaments = TournamentTeams::where('team_id', $team->id)
             ->with('tournament')
             ->get();
-
+        
         return view('teams.show', compact('team', 'players', 'topScorer', 'topAssister', 'nextMatches', 'teamTournaments'));
     }
 

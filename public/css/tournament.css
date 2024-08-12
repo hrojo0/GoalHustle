@@ -9096,7 +9096,7 @@ a.uk-thumbnail:focus {
   margin-top: 0;
   margin-bottom: 20px;
   padding: 5px 20px;
-  background: #eeeeee;
+  background: #eeeeee !important;
   font-size: 18px;
   line-height: 24px;
   cursor: pointer;
@@ -11046,9 +11046,8 @@ q {
   text-align: center;
 }
 .match-list-wrap .match-list-item .wrapper > div {
-  display: inline;
+  display: inline-block;
   vertical-align: middle;
-  min-height: 45px;
 }
 .main-next-match-title {
   margin: 36px 0 0 40px;
