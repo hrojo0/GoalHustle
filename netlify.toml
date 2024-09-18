@@ -3,4 +3,4 @@ command = "composer install --no-dev --optimize-autoloader && php artisan config
 publish = "public"
 
 [build.environment]
-  PHP_VERSION = "8.0"
+  PHP_VERSION = "8.2"
