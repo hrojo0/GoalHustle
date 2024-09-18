@@ -1,3 +1,6 @@
 [build]
 command = "composer install --no-dev --optimize-autoloader && php artisan config:cache"
 publish = "public"
+
+[build.environment]
+  PHP_VERSION = "8.0"
