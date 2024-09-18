@@ -19,6 +19,7 @@ use App\Policies\StatsPlayerPolicy;
 use App\Policies\TeamPolicy;
 use App\Policies\TournamentPolicy;
 use App\Policies\TournamentTeamPolicy;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(/*UrlGenerator $url*/)
     {
         //
         //$this->registerPolicies();
@@ -65,5 +66,11 @@ class AppServiceProvider extends ServiceProvider
                 'tournamentsNav' => $tournamentsNav,
                 'categoriesNav' => $categoriesNav ]);
         });
+
+       /* if (env('APP_ENV') == 'production') {
+            $url->forceScheme('https');
+        }*/
     }
+
+    
 }
