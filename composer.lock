@@ -5955,7 +5955,7 @@
                 "ext-simplexml": "*",
                 "fidry/cpu-core-counter": "^1.1.0",
                 "jean85/pretty-package-versions": "^2.0.5",
-                "php": "~8.2.0 || ~8.3.0",
+                "php": "~8.0.0 || ~8.3.0",
                 "phpunit/php-code-coverage": "^10.1.11 || ^11.0.0",
                 "phpunit/php-file-iterator": "^4.1.0 || ^5.0.0",
                 "phpunit/php-timer": "^6.0.0 || ^7.0.0",
@@ -6459,7 +6459,7 @@
                 "ext-mbstring": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "php": "^8.1.0"
+                "php": "^8.0.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.64.0",
@@ -6829,7 +6829,7 @@
                 "nunomaduro/termwind": "^1.15.1|^2.0.1",
                 "pestphp/pest-plugin": "^2.1.1",
                 "pestphp/pest-plugin-arch": "^2.7.0",
-                "php": "^8.1.0",
+                "php": "^8.0.0",
                 "phpunit/phpunit": "^10.5.17"
             },
             "conflict": {
@@ -7075,7 +7075,7 @@
             "require": {
                 "laravel/framework": "^10.48.9|^11.5.0",
                 "pestphp/pest": "^2.34.7",
-                "php": "^8.1.0"
+                "php": "^8.0.0"
             },
             "require-dev": {
                 "laravel/dusk": "^7.13.0",
@@ -8961,7 +8961,7 @@
             },
             "require": {
                 "nikic/php-parser": "^4.18.0 || ^5.0.0",
-                "php": "^8.1.0",
+                "php": "^8.0.0",
                 "phpdocumentor/reflection-docblock": "^5.3.0",
                 "phpunit/phpunit": "^10.5.5  || ^11.0.0",
                 "symfony/finder": "^6.4.0 || ^7.0.0"
